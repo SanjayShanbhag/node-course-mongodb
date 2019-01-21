@@ -16,10 +16,14 @@ app.post('/todos', (req,res) => {
   todo.save().then((docs) => {
     res.send(docs);
   }, (e) => {
-    res.status(200).send(e);
+    res.status(400).send(e);
   });
 });
 
 app.listen('3000', () => {
   console.log('The server is up on port 3000');
-})
+});
+
+module.exports = {
+  app
+}
