@@ -11,7 +11,9 @@ const todos = [{
   text: 'Some text one'
 }, {
   _id: new ObjectID(),
-  text: 'Some text two'
+  text: 'Some text two',
+  completed: true,
+  completedAt: 245
 }];
 
 beforeEach((done) => {
@@ -144,5 +146,31 @@ describe('DELETE /todos:id', () => {
       .delete(`/todos/${newID}`)
       .expect(404)
       .end(done);
+  });
+});
+
+describe('PATCH /todos/:id', () => {
+  it('should update the completed property', (done) => {
+    var id = todos[0]._id.toHexString();
+    request(app)
+      .patch(`/todos/${id}`)
+      .send({completed: true})
+      .expect(200)
+      .expect((res) => {
+        expect(typeof res.body.todo.completedAt).toBe('number');
+      })
+      .end(done);
+  });
+
+  it('should set the completed as false', (done) => {
+    var id = todos[1]._id.toHexString();
+    request(app)
+    .patch(`/todos/${id}`)
+    .send({completed: false})
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo.completedAt).toBeFalsy();
+    })
+    .end(done);
   });
 });
